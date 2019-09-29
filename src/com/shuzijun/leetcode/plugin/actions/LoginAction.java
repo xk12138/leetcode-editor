@@ -8,6 +8,7 @@ import com.shuzijun.leetcode.plugin.manager.ViewManager;
 import com.shuzijun.leetcode.plugin.model.Config;
 import com.shuzijun.leetcode.plugin.setting.PersistentConfig;
 import com.shuzijun.leetcode.plugin.utils.*;
+import com.shuzijun.leetcode.plugin.window.WindowFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -36,7 +37,7 @@ public class LoginAction extends AbstractAsynAction {
                 return;
             }
             if (response.getStatusLine().getStatusCode() != 200) {
-                JTree tree = anActionEvent.getData(DataKeys.LEETCODE_PROJECTS_TREE);
+                JTree tree = WindowFactory.getDataContext(anActionEvent.getProject()).getData(DataKeys.LEETCODE_PROJECTS_TREE);
                 ViewManager.loadServiceData(tree);
                 MessageUtils.showWarnMsg("warning", PropertiesUtils.getInfo("request.failed"));
                 return;
@@ -63,6 +64,11 @@ public class LoginAction extends AbstractAsynAction {
                     .addTextBody("next", "/problems")
                     .build();
             post.setEntity(ent);
+            post.setHeader("x-requested-with", "XMLHttpRequest");
+            post.setHeader("accept", "application/json, text/plain, */*");
+
+
+
             CloseableHttpResponse loginResponse = HttpClientUtils.executePost(post);
 
             if (loginResponse == null) {
@@ -76,6 +82,10 @@ public class LoginAction extends AbstractAsynAction {
                     && StringUtils.isBlank(body)) {
                 examineEmail();
                 MessageUtils.showInfoMsg("info", PropertiesUtils.getInfo("login.success"));
+            }else if(loginResponse.getStatusLine().getStatusCode() == 400){
+                JSONObject jsonObject = JSONObject.parseObject(body);
+                MessageUtils.showInfoMsg("info", StringUtils.join(jsonObject.getJSONObject("form").getJSONArray("errors"),","));
+                return;
             } else {
                 HttpClientUtils.resetHttpclient();
                 MessageUtils.showInfoMsg("info", PropertiesUtils.getInfo("login.unknown"));
@@ -90,7 +100,7 @@ public class LoginAction extends AbstractAsynAction {
             post.abort();
         }
 
-        JTree tree = anActionEvent.getData(DataKeys.LEETCODE_PROJECTS_TREE);
+        JTree tree = WindowFactory.getDataContext(anActionEvent.getProject()).getData(DataKeys.LEETCODE_PROJECTS_TREE);
         ViewManager.loadServiceData(tree);
 
     }

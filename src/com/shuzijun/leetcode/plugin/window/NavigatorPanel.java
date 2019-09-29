@@ -2,13 +2,20 @@ package com.shuzijun.leetcode.plugin.window;
 
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
+import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextField;
+import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.treeStructure.SimpleTree;
+import com.intellij.util.ui.JBDimension;
+import com.shuzijun.leetcode.plugin.listener.QueryDocumentListener;
 import com.shuzijun.leetcode.plugin.listener.QueryKeyListener;
 import com.shuzijun.leetcode.plugin.listener.TreeMouseListener;
 import com.shuzijun.leetcode.plugin.listener.TreeeWillListener;
@@ -18,6 +25,7 @@ import com.shuzijun.leetcode.plugin.utils.DataKeys;
 import com.shuzijun.leetcode.plugin.utils.PropertiesUtils;
 
 import javax.swing.*;
+import javax.swing.text.Document;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
@@ -30,6 +38,7 @@ public class NavigatorPanel extends SimpleToolWindowPanel implements DataProvide
 
 
     private JPanel queryPanel;
+    private ListPopupImpl queryPopup;
     private JBScrollPane contentScrollPanel;
     private SimpleTree tree;
 
@@ -116,9 +125,15 @@ public class NavigatorPanel extends SimpleToolWindowPanel implements DataProvide
 
         queryPanel = new JPanel();
         queryPanel.setLayout(new BoxLayout(queryPanel, BoxLayout.Y_AXIS));
+        BaseListPopupStep step = new BaseListPopupStep("Similar Problems");
+        step.setDefaultOptionIndex(0);
+        queryPopup = new ListPopupImpl(project,step);
+        queryPopup.setSize(new JBDimension(queryPanel.getWidth(), 300));
         JTextField queryField = new JBTextField();
         queryField.setToolTipText("Enter Search");
-        queryField.addKeyListener(new QueryKeyListener(queryField, contentScrollPanel, toolWindow, queryPanel));
+        Document dt = queryField.getDocument();
+        dt.addDocumentListener(new QueryDocumentListener(queryField,contentScrollPanel, queryPopup));
+        queryField.addKeyListener(new QueryKeyListener(queryField, contentScrollPanel, toolWindow,queryPopup));
         queryPanel.add(queryField);
 
         ActionToolbar findToolbar = actionManager.createActionToolbar("",

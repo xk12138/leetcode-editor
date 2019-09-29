@@ -56,7 +56,7 @@ public class ViewManager {
         DefaultTreeModel treeMode = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeMode.getRoot();
         root.removeAllChildren();
-        DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Question(String.format("Problems(%d)",questionList.size())));
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Question(String.format("Problems(%d)", questionList.size())));
         root.add(node);
         for (Question q : questionList) {
             node.add(new DefaultMutableTreeNode(q));
@@ -87,7 +87,7 @@ public class ViewManager {
         }
     }
 
-    public static void updateStatus(){
+    public static void updateStatus() {
         filter.put(Constant.FIND_TYPE_STATUS, QuestionManager.getStatus());
     }
 
@@ -151,7 +151,7 @@ public class ViewManager {
             for (Question q : question.values()) {
                 node.add(new DefaultMutableTreeNode(q));
             }
-            ((Question)node.getUserObject()).setTitle(String.format("Problems(%d)",node.getChildCount()));
+            ((Question) node.getUserObject()).setTitle(String.format("Problems(%d)", node.getChildCount()));
         } else {
             for (String key : selectQuestionList) {
                 Question q = question.get(key);
@@ -159,7 +159,7 @@ public class ViewManager {
                     node.add(new DefaultMutableTreeNode(q));
                 }
             }
-            ((Question)node.getUserObject()).setTitle(String.format("Problems(%d)",node.getChildCount()));
+            ((Question) node.getUserObject()).setTitle(String.format("Problems(%d)", node.getChildCount()));
         }
         treeMode.reload();
         tree.expandPath(new TreePath(node.getPath()));
@@ -187,12 +187,34 @@ public class ViewManager {
         return;
     }
 
+    public static Question getTreeQuestion(JTree tree) {
+        Question question = null;
+        if (tree != null) {
+            DefaultMutableTreeNode note = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (note != null) {
+                question = (Question) note.getUserObject();
+                if (question != null) {
+                    if ("lock".equals(question.getStatus())) {
+                        question = null;
+                    }
+                    if (!question.isLeaf()) {
+                        question = null;
+                    }
+                }
+            }
+        }
+        if(question == null){
+            MessageUtils.showInfoMsg("info", PropertiesUtils.getInfo("response.select"));
+        }
+        return question;
+    }
+
     private static void addChild(DefaultMutableTreeNode rootNode, List<Tag> Lists, Map<String, Question> questionMap) {
         if (!Lists.isEmpty()) {
             for (Tag tag : Lists) {
                 long qCnt = tag.getQuestions().stream().filter(q -> questionMap.get(q) != null).count();
                 DefaultMutableTreeNode tagNode = new DefaultMutableTreeNode(new Question(String.format("%s(%d)",
-                    tag.getName(), qCnt)));
+                        tag.getName(), qCnt)));
                 rootNode.add(tagNode);
                 for (String key : tag.getQuestions()) {
                     if (questionMap.get(key) != null) {
