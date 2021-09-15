@@ -1,8 +1,8 @@
 <idea-plugin>
     <id>leetcode-editor</id>
     <name>LeetCode Editor</name>
-    <version>7.0</version>
-    <vendor email="shuzijun0109@gmail.com" url="https://github.com/shuzijun/idea-leetcode-plugin">shuzijun</vendor>
+    <version>1.0</version>
+    <vendor email="269376956@qq.com" url="https://github.com/shuzijun/idea-leetcode-plugin">zhuxiaoqi</vendor>
 
     <description><![CDATA[
         <div>
@@ -134,6 +134,7 @@
          on how to target different products -->
     <!-- uncomment to enable plugin in all products -->
     <depends>com.intellij.modules.lang</depends>
+
       
     <application-components>
             <!-- Add your application components here -->

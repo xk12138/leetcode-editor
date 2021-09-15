@@ -31,6 +31,8 @@ public class CodeManager {
             return;
         }
 
+        codeTypeEnum.tryInitialize(project, question);
+
         if (!fillQuestion(question, codeTypeEnum, project)) {
             return;
         }
@@ -100,6 +102,7 @@ public class CodeManager {
                     if (codeTypeEnum.getType().equals(object.getString("lang"))) {
                         question.setLangSlug(object.getString("langSlug"));
                         StringBuffer sb = new StringBuffer();
+                        sb.append(codeTypeEnum.getBeforeBegin(project));
                         sb.append(codeTypeEnum.getComment()).append(Constant.SUBMIT_REGION_BEGIN).append("\n");
                         sb.append(object.getString("code").replaceAll("\\n", "\n")).append("\n");
                         sb.append(codeTypeEnum.getComment()).append(Constant.SUBMIT_REGION_END).append("\n");

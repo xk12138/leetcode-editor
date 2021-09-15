@@ -14,6 +14,7 @@ public class Question {
     private Integer level;
     private String status;
     private String titleSlug;
+    private String titleFileName;
     private boolean leaf = Boolean.FALSE;
     private String testCase;
     private String langSlug;
@@ -164,6 +165,10 @@ public class Question {
 
     public void setTitleSlug(String titleSlug) {
         this.titleSlug = titleSlug;
+    }
+
+    public String getTitleFileName() {
+        return getTitleSlug().replace('-', '_');
     }
 
     public String getTestCase() {

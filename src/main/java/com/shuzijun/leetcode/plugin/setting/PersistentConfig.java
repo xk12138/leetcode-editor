@@ -22,7 +22,9 @@ import java.util.Map;
 @State(name = "PersistentConfig" + PluginConstant.ACTION_SUFFIX, storages = {@Storage(value = PluginConstant.ACTION_PREFIX + "-config.xml", roamingType = RoamingType.DISABLED)})
 public class PersistentConfig implements PersistentStateComponent<PersistentConfig> {
 
-    public static String PATH = "leetcode" + File.separator + "editor";
+
+    public static final String ROOT_DIR = "leetcode/";
+    public static String PATH = ROOT_DIR + "editor";
     public static String OLDPATH = "leetcode-plugin";
     private static String INITNAME = "initConfig";
 
@@ -66,6 +68,10 @@ public class PersistentConfig implements PersistentStateComponent<PersistentConf
 
     public String getTempFilePath() {
         return getConfig().getFilePath() + File.separator + PATH + File.separator + initConfig.get(INITNAME).getAlias() + File.separator;
+    }
+
+    public String getAbsoluteFilePath() {
+        return PATH + File.separator + initConfig.get(INITNAME).getAlias() + File.separator;
     }
 
     public void savePassword(String password, String username) {

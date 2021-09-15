@@ -1,0 +1,6 @@
+#include "leetcode/leetcode.h"
+
+int main() {
+    test();
+    return 0;
+}

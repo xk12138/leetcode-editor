@@ -55,7 +55,7 @@ public class Constant {
     /**
      * 默认模板
      */
-    public static final String CUSTOM_FILE_NAME = "[$!{question.frontendQuestionId}]${question.title}";
+    public static final String CUSTOM_FILE_NAME = "_$!{question.frontendQuestionId}_${question.titleFileName}";
     public static final String CUSTOM_TEMPLATE = "${question.content}\n\n${question.code}";
 
     /**
