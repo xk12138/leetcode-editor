@@ -106,6 +106,7 @@ public class CodeManager {
                         sb.append(codeTypeEnum.getComment()).append(Constant.SUBMIT_REGION_BEGIN).append("\n");
                         sb.append(object.getString("code").replaceAll("\\n", "\n")).append("\n");
                         sb.append(codeTypeEnum.getComment()).append(Constant.SUBMIT_REGION_END).append("\n");
+                        sb.append(codeTypeEnum.getAfterEnd(project));
                         question.setCode(sb.toString());
                         break;
                     }

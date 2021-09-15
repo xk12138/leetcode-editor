@@ -24,6 +24,7 @@ public enum CodeTypeEnum {
         final String leetcodeAbsoluteDirPath = File.separator + PersistentConfig.ROOT_DIR;
         final String headName = "leetcode.h";
         final String beforeBeginTemplate = "/template/C/beforeBegin.template";
+        final String afterEndTemplate = "/template/C/afterEnd.template";
 
         @Override
         public void tryInitialize(Project project, Question question) {
@@ -201,14 +202,32 @@ public enum CodeTypeEnum {
         public String getBeforeBegin(Project project) {
             InputStream inputStream = this.getClass().getResourceAsStream(beforeBeginTemplate);
             if (inputStream == null) {
-                MessageUtils.getInstance(project).showWarnMsg("error", "没有找到main.c的模板文件");
+                MessageUtils.getInstance(project).showWarnMsg("error", "没有找到beforeBegin的模板文件");
                 return "";
             }
             byte[] bytes;
             try {
                 bytes = inputStream.readAllBytes();
             } catch (IOException e) {
-                MessageUtils.getInstance(project).showWarnMsg("error", "读取main.c的模板文件失败");
+                MessageUtils.getInstance(project).showWarnMsg("error", "读取beforeBegin的模板文件失败");
+                e.printStackTrace();
+                return "";
+            }
+            return new String(bytes);
+        }
+
+        @Override
+        public String getAfterEnd(Project project) {
+            InputStream inputStream = this.getClass().getResourceAsStream(afterEndTemplate);
+            if (inputStream == null) {
+                MessageUtils.getInstance(project).showWarnMsg("error", "没有找到afterEnd的模板文件");
+                return "";
+            }
+            byte[] bytes;
+            try {
+                bytes = inputStream.readAllBytes();
+            } catch (IOException e) {
+                MessageUtils.getInstance(project).showWarnMsg("error", "读取afterEnd的模板文件失败");
                 e.printStackTrace();
                 return "";
             }
@@ -285,6 +304,10 @@ public enum CodeTypeEnum {
     }
 
     public String getBeforeBegin(Project project) {
-        return "'";
+        return "";
+    }
+
+    public String getAfterEnd(Project project) {
+        return "";
     }
 }

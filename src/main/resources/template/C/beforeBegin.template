@@ -1,4 +1,2 @@
 
 #include "../../leetcode.h"
-
-void test() {}
